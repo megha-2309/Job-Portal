@@ -28,17 +28,26 @@ import {
   registerUserWithConfirmSchema,
 } from "@/src/features/auth/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const Registeration: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(registerUserWithConfirmSchema),
-  });
+const {
+  register,
+  handleSubmit,
+  control,
+  formState: { errors },
+} = useForm({
+  resolver: zodResolver(registerUserWithConfirmSchema),
+
+  defaultValues: {
+    name: "",
+    userName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "applicant",
+  },
+});
 
    const router = useRouter()
 
@@ -46,13 +55,15 @@ const Registeration: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const onSubmit = async (data: RegisterUserWithConfirmData) => {
+    
     const result = await registerationUserAction(data);
 
+      
  
     if(result.status === "SUCCESS"){
       if(data.role === "employer")
         router.push("/employer-dashboard")
-      else router.push("/")   
+      else router.push("/dashboard")   
     }
 
     if (result.status === "SUCCESS") {
@@ -60,6 +71,7 @@ const Registeration: React.FC = () => {
     } else {
       toast.error(result.message);
     }
+ 
   };
 
   return (
@@ -196,6 +208,7 @@ const Registeration: React.FC = () => {
                     <Eye className="w-4 h-4 text-muted-foreground" />
                   )}
                 </Button>
+
               </div>
               {errors.password && (
                 <p className="text-sm text-destructive">

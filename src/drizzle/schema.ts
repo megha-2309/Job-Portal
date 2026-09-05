@@ -41,7 +41,7 @@ export const employers = mysqlTable("employers" , {
      bannerImageUrl:text("banner_image_url"),
      organizationType:varchar("organization_type" , {length:100}),
      teamSize:varchar("team_size" , {length:50}),
-     yearsOfEstablishment:year("year_of_establishment"),
+     yearOfEstablishment:year("year_of_establishment"),
      websiteUrl:varchar("website_url" , {length:255}),
      location:varchar("location" , {length:255}),
 

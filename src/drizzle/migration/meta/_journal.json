@@ -8,6 +8,13 @@
       "when": 1787596035586,
       "tag": "0000_medical_midnight",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1787677246138,
+      "tag": "0001_slow_gambit",
+      "breakpoints": true
     }
   ]
 }

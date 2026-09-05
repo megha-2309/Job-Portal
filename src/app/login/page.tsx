@@ -22,8 +22,10 @@ import {
   LoginUserData,
   loginUserSchema,
 } from "@/src/features/auth/auth.schema";
+import { useRouter } from "next/navigation";
 
 const LoginForm: React.FC = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -34,19 +36,25 @@ const LoginForm: React.FC = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-
   const onSubmit = async (data: LoginUserData) => {
-  
     try {
       const result = await loginUserAction(data);
 
-      if (result.status === "SUCCESS") toast.success(result.message);
-      else toast.error(result.message);
+      console.log("LOGIN RESULT:", result);
+
+      if (result.status !== "SUCCESS") {
+        toast.error(result.message);
+        return;
+      }
+
+      toast.success("Login Successful");
+
+      router.push("/employer-dashboard");
     } catch (error) {
-      console.error(error);
+      console.error("CLIENT LOGIN ERROR:", error);
+      toast.error("Login failed");
     }
   };
-
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
@@ -63,7 +71,14 @@ const LoginForm: React.FC = () => {
 
         {/* Form */}
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {/* <form onSubmit={handleSubmit(onSubmit)} className="space-y-6"> */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(onSubmit)(e);
+            }}
+            className="space-y-6"
+          >
             {/* Email */}
             <div className="space-y-2">
               <Label htmlFor="email">Email Address</Label>
@@ -107,19 +122,17 @@ const LoginForm: React.FC = () => {
                   }`}
                 />
 
-                <Button
+                <button
                   type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                   onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-0 top-0 h-full px-3 flex items-center justify-center"
                 >
                   {showPassword ? (
                     <EyeOff className="w-4 h-4 text-muted-foreground" />
                   ) : (
                     <Eye className="w-4 h-4 text-muted-foreground" />
                   )}
-                </Button>
+                </button>
               </div>
               {errors.password && (
                 <p className="text-sm text-destructive">
@@ -130,7 +143,7 @@ const LoginForm: React.FC = () => {
 
             {/* Submit */}
             <Button type="submit" className="w-full">
-               Sign In
+              Sign In
             </Button>
 
             {/* Login */}
